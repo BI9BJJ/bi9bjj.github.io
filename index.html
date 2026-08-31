@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BI9BJJ · Mengbo Wang 业余无线电台</title>
+<title>BI9BJJ · Wang Mengbo 业余无线电台</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Oswald:wght@500;600&display=swap" rel="stylesheet">
@@ -366,7 +366,11 @@ footer.site-footer{padding:60px 0 40px;border-top:1px solid var(--border);}
     </div>
     <h1 class="callsign">BI9BJJ</h1>
     <p class="hero-meta mono"><b>WANG MENGBO</b> · Xi'an, China · Grid OM44</p>
-    <p class="hero-bio"><span class="ph">[占位简介 — 请替换为真实的一句话简介，例如"专注HF频段DX通联，业余无线电爱好者"]</span></p>
+    <p class="hero-bio"><span class="ph">[Welcome to my homepage! I am a radio amateur currently studying for the Chinese Amateur Radio Class C license, and I look forward to making contact with more amateur radio operators. I currently operate mainly in the FT8 mode, and I hope to become proficient in SSB and CW modes in the future. I am currently learning English and CW operations, and I look forward to exchanging physical QSL cards with everyone.<br /><br />
+如果收到您的QSL卡片，我一定在一个月内回复。<br />
+Upon receiving your QSL card, I will reply within one month.<br />
+上海市 399-5 邮政信箱 BI9BJJ 021-58223996（收），邮编：201399<br />
+BI9BJJ P.O. Box 399-5, HuiNan Post Office, Shanghai 201399, P.R.China, +86-21-58223996]</span></p>
   </div>
   <div class="hero-scroll-hint"><span class="line"></span>向下滚动浏览电台</div>
 </header>
@@ -490,7 +494,7 @@ footer.site-footer{padding:60px 0 40px;border-top:1px solid var(--border);}
         <div class="footer-contact">
           Wang Mengbo · Xi'an, China<br>
           邮箱：<span class="ph">w.mb@foxmail.com</span><br>
-          微信/QQ：<span class="ph">[按需填写]</span>
+          QQ：<span class="ph">10361289</span>
         </div>
       </div>
       <div class="footer-links">
@@ -531,6 +535,14 @@ const ICONS = {
 };
 function iconSvg(name){
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'+ICONS[name]+'</svg>';
+}
+// 图片占位辅助函数：如果 item.img 有填写真实图片文件名，就显示真实照片；
+// 没填就自动显示占位图标。以后传照片，只要在数据里加一行 img:'文件名.jpg' 就行，不用改这个函数。
+function mediaBox(item, extraClass, placeholderText){
+  if(item.img){
+    return '<img class="'+extraClass+'" src="'+item.img+'" alt="'+(item.name||'')+'" style="width:100%;height:100%;object-fit:cover;">';
+  }
+  return '<div class="placeholder-box '+extraClass+'">'+iconSvg(item.icon || 'camera')+'<div class="ph-text">'+placeholderText+'</div></div>';
 }
 
 /* =========================================================
@@ -627,6 +639,9 @@ document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
 /* =========================================================
    6. 设备墙数据 + 渲染 + 筛选
    ========================================================= */
+// 想给某件设备换成真实照片：把图片传到仓库里，然后在对应这一行加上 img:'文件名.jpg'（跟其他字段用逗号隔开）
+// 例如： {cat:'rig', icon:'rig', img:'ic7300.jpg', name:'主力 HF 收发机', ...}
+// 没有 img 字段的，会继续自动显示占位图标，不影响其他设备。
 const EQUIPMENT = [
   {cat:'rig', icon:'rig', name:'主力 HF 收发机', model:'Icom IC-7300', note:'日常 HF 频段 DX 通联主力机型', specs:{'频率范围':'1.8–50MHz','输出功率':'100W','模式':'SSB/CW/FT8/AM'}},
   {cat:'rig', icon:'rig', name:'便携全频段手台', model:'Yaesu FT-70D', note:'外出移动通联 / 中继台使用', specs:{'频段':'VHF/UHF','输出功率':'5W','模式':'FM/C4FM'}},
@@ -645,8 +660,7 @@ EQUIPMENT.forEach((item, idx)=>{
   card.className = 'equip-card';
   card.dataset.cat = item.cat;
   card.innerHTML =
-    '<div class="placeholder-box equip-img">'+iconSvg(item.icon)+
-      '<div class="ph-text">占位图 · 待替换实拍照片</div></div>'+
+    mediaBox(item, 'equip-img', '占位图 · 待替换实拍照片')+
     '<div class="equip-body">'+
       '<div class="equip-cat">'+CAT_LABEL[item.cat]+'</div>'+
       '<div class="equip-name">'+item.name+'</div>'+
@@ -675,7 +689,9 @@ const lightbox = document.getElementById('lightbox');
 const lightboxImage = document.getElementById('lightboxImage');
 const lightboxBody = document.getElementById('lightboxBody');
 function openLightbox(item){
-  lightboxImage.innerHTML = iconSvg(item.icon || 'camera') + '<div class="ph-text">占位图 · 待替换清晰实拍照片</div>';
+  lightboxImage.innerHTML = item.img
+    ? '<img src="'+item.img+'" alt="'+(item.name||'')+'" style="width:100%;height:100%;object-fit:cover;">'
+    : iconSvg(item.icon || 'camera') + '<div class="ph-text">占位图 · 待替换清晰实拍照片</div>';
   let specsHtml = '';
   if(item.specs){
     specsHtml = '<div class="lb-specs">' + Object.entries(item.specs).map(([k,v])=>
@@ -758,6 +774,8 @@ document.getElementById('callSearch').addEventListener('input', applyLogFilters)
 /* =========================================================
    9. 荣誉证书墙数据 + 渲染
    ========================================================= */
+// 想换成真实证书扫描图/照片：传到仓库里，然后加 img:'文件名.jpg'，比如
+// {name:'DXCC 百国奖', year:'2024', img:'dxcc-2024.jpg'}
 const CERTS = [
   {name:'DXCC 百国奖', year:'2024'},
   {name:'WAC 五大洲奖', year:'2023'},
@@ -772,12 +790,13 @@ function renderMarquee(container, list){
   const doubled = list.concat(list); // 无缝循环
   container.innerHTML = doubled.map(c=>
     '<div class="cert-card">'+
-      '<div class="placeholder-box cert-img">'+iconSvg('cert')+'</div>'+
+      mediaBox(Object.assign({icon:'cert'}, c), 'cert-img', '占位图')+
       '<div class="cert-info"><div class="cert-name">'+c.name+'</div><div class="cert-year">获得年份 '+c.year+'</div></div>'+
     '</div>'
   ).join('');
   container.querySelectorAll('.cert-card').forEach((el, i)=>{
-    el.addEventListener('click', ()=>openLightbox({name:list[i % list.length].name, year:list[i % list.length].year, icon:'cert'}));
+    const c = list[i % list.length];
+    el.addEventListener('click', ()=>openLightbox({name:c.name, year:c.year, icon:'cert', img:c.img}));
   });
 }
 renderMarquee(document.getElementById('marqueeLeft'), CERTS);
