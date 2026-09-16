@@ -540,7 +540,7 @@ function iconSvg(name){
 // 没填就自动显示占位图标。以后传照片，只要在数据里加一行 img:'文件名.jpg' 就行，不用改这个函数。
 function mediaBox(item, extraClass, placeholderText){
   if(item.img){
-    return '<img class="'+extraClass+'" src="'+item.img+'" alt="'+(item.name||'')+'" style="width:100%;height:100%;object-fit:cover;">';
+    return '<img class="'+extraClass+'" src="'+item.img+'" alt="'+(item.name||'')+'" style="display:block;width:100%;aspect-ratio:4/3;object-fit:cover;object-position:center;">';
   }
   return '<div class="placeholder-box '+extraClass+'">'+iconSvg(item.icon || 'camera')+'<div class="ph-text">'+placeholderText+'</div></div>';
 }
