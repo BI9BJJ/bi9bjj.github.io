@@ -209,6 +209,7 @@ section{padding:90px 0;border-top:1px solid var(--border);position:relative;}
 .chip.active{background:var(--accent-primary);border-color:var(--accent-primary);color:var(--bg-page);font-weight:500;}
 
 /* ====================== 设备墙 ====================== */
+img.equip-img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;}
 .equipment-grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:24px;margin-top:36px;
 }
@@ -329,7 +330,7 @@ footer.site-footer{padding:60px 0 40px;border-top:1px solid var(--border);}
 .lightbox.open{display:flex;}
 .lightbox-content{
   background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;
-  max-width:560px;width:100%;overflow:hidden;position:relative;
+  max-width:560px;width:100%;max-height:calc(100dvh - 48px);overflow:auto;position:relative;
 }
 .lightbox-close{
   position:absolute;top:12px;right:12px;background:var(--bg-page);border:1px solid var(--border);
@@ -391,8 +392,7 @@ BI9BJJ P.O. Box 399-5, HuiNan Post Office, Shanghai 201399, P.R.China, +86-21-58
       <button class="chip active" data-cat="all">全部</button>
       <button class="chip" data-cat="rig">收发信机</button>
       <button class="chip" data-cat="antenna">天线</button>
-      <button class="chip" data-cat="amp">功放</button>
-      <button class="chip" data-cat="power">电源</button>
+      <button class="chip" data-cat="receiver">接收机</button>
       <button class="chip" data-cat="accessory">附件配件</button>
     </div>
   </div>
@@ -404,7 +404,7 @@ BI9BJJ P.O. Box 399-5, HuiNan Post Office, Shanghai 201399, P.R.China, +86-21-58
     <div class="section-head">
       <p class="label">Shack Equipment</p>
       <h2>我的电台设备</h2>
-      <p>点击任意卡片查看更详细的参数说明（示例数据，可替换为真实设备信息）。</p>
+      <p>点击设备卡片查看实拍大图和说明。</p>
     </div>
     <div class="equipment-grid" id="equipmentGrid"></div>
   </div>
@@ -643,24 +643,35 @@ document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
 // 例如： {cat:'rig', icon:'rig', img:'ic7300.jpg', name:'主力 HF 收发机', ...}
 // 没有 img 字段的，会继续自动显示占位图标，不影响其他设备。
 const EQUIPMENT = [
-  {cat:'rig', icon:'rig', img:'images/FT-710.jpg', name:'主力 HF 收发机', model:'Yaesu FT-710', note:'日常 HF 频段 DX 通联主力机型', specs:{'频率范围':'1.8–50MHz','输出功率':'100W','模式':'SSB/CW/FT8/AM'}},
-  {cat:'rig', icon:'rig', name:'便携全频段手台', model:'Yaesu FT-70D', note:'外出移动通联 / 中继台使用', specs:{'频段':'VHF/UHF','输出功率':'5W','模式':'FM/C4FM'}},
-  {cat:'antenna', icon:'antenna', name:'三段八木定向天线', model:'3-ele Yagi 20/15/10m', note:'指向性强，适合高频段 DX', specs:{'覆盖频段':'20/15/10m','增益':'约7dBi','转向':'电动转台'}},
-  {cat:'antenna', icon:'antenna', img:'images/ATAS-120.jpg', name:'自动调谐GP天线', model:'Yaesu ATAS-120', note:'驾车出行首选', specs:{'覆盖频段':'HF/VHF/UHF','架设高度':'车顶','方向性':'近似全向'}},
-  {cat:'amp', icon:'amp', name:'线性功放', model:'ACOM 600S', note:'弱信号 DX 时提升信噪比', specs:{'输出功率':'600W','频段':'160–6m','冷却方式':'风冷'}},
-  {cat:'power', icon:'power', name:'稳压直流电源', model:'Astron RS-35M', note:'为收发信机提供稳定供电', specs:{'输出电压':'13.8V','最大电流':'35A','类型':'线性电源'}},
-  {cat:'accessory', icon:'accessory', name:'自动天线调谐器', model:'MFJ-993B', note:'快速匹配多频段天线', specs:{'调谐范围':'1.8–30MHz','功率容量':'300W','类型':'自动/手动'}},
-  {cat:'accessory', icon:'accessory', name:'专业电台耳麦', model:'Heil Pro Set Elite', note:'长时间通联佩戴舒适，音质清晰', specs:{'类型':'动圈耳麦','阻抗':'600Ω','附带':'降噪麦克风'}}
+  {"cat":"rig","img":"images/equipment/x6100.jpg","name":"便携式短波收发机","model":"Xiegu X6100","note":"带频谱显示的 HF／50 MHz 便携电台。"},
+  {"cat":"rig","img":"images/equipment/tk-8185h.jpg","name":"车载收发机","model":"Kenwood TK-8185H","note":"带前置扬声器和实体按键的车载电台。"},
+  {"cat":"rig","img":"images/equipment/lt-9900.jpg","name":"多频段手持电台","model":"Linton LT-9900","note":"配有可拆卸天线和数字键盘的手持电台。"},
+  {"cat":"rig","img":"images/equipment/uv4r.jpg","name":"手持电台","model":"iRadio UV4R","note":"配有短天线、背光屏幕和数字键盘的手持电台。"},
+  {"cat":"rig","img":"images/equipment/uv-k5.jpg","name":"双频手持电台","model":"Quansheng UV-K5","note":"带背光屏幕和数字键盘的 VHF／UHF 手持电台。"},
+  {"cat":"rig","img":"images/equipment/uv-k6.jpg","name":"双频手持电台","model":"Quansheng UV-K6","note":"蓝色机身的 VHF／UHF 手持电台。"},
+  {"cat":"receiver","img":"images/equipment/rx-888.jpg","name":"软件定义接收机","model":"RX-888 MK II","note":"机身标注为 16 位直接采样接收机，可配合电脑观察频谱和接收信号。"},
+  {"cat":"antenna","img":"images/equipment/atas-120a.jpg","name":"自动调谐车载天线","model":"Yaesu ATAS-120A","note":"搭配兼容电台使用的自动调谐车载天线。"},
+  {"cat":"antenna","img":"images/equipment/compact-vehicle-antenna.jpg","name":"紧凑型车载天线","model":"Compact Vehicle Antenna","note":"配有磁吸底座和馈线的短型车载鞭状天线。"},
+  {"cat":"antenna","img":"images/equipment/nr-770r.jpg","name":"车载鞭状天线","model":"NR-770R","note":"细长的车载鞭状天线，照片展示了底部接头与振子。"},
+  {"cat":"antenna","img":"images/equipment/donut-am-antenna.jpg","name":"中波接收环形天线","model":"Donut AM Antenna","note":"红色环形天线，带手动调谐旋钮，用于接收 AM 广播。"},
+  {"cat":"antenna","img":"images/equipment/donut-sw-antenna.jpg","name":"短波接收环形天线","model":"Donut SW Antenna","note":"蓝色环形天线，带手动调谐旋钮，用于短波接收。"},
+  {"cat":"antenna","img":"images/equipment/donut-wb-antenna.jpg","name":"宽带接收环形天线","model":"Donut WB Antenna","note":"黑色环形天线，可用于宽带接收实验。"},
+  {"cat":"antenna","img":"images/equipment/small-loop-u-band-antenna.jpg","name":"U 段小环天线","model":"Small Loop U-band Antenna","note":"带调谐旋钮的小环天线，用于 U 段接收实验。"},
+  {"cat":"antenna","img":"images/equipment/small-loop-v-band-antenna.jpg","name":"V 段小环天线","model":"Small Loop V-band Antenna","note":"带调谐旋钮的小环天线，用于 V 段接收实验。"},
+  {"cat":"accessory","img":"images/equipment/hi-z-amplifier.jpg","name":"高阻输入前置放大器","model":"Hi-Z Amplifier","note":"用于高阻抗接收天线的前端信号放大。"},
+  {"cat":"accessory","img":"images/equipment/transimpedance-amplifier.jpg","name":"跨阻放大器","model":"Transimpedance Amplifier","note":"将输入电流转换为电压，用于接收天线前端实验。"},
+  {"cat":"accessory","img":"images/equipment/mmdvm-1.jpg","name":"数字语音热点","model":"MMDVM · 双天线款","note":"带两根天线和显示屏，用于数字语音热点实验。"},
+  {"cat":"accessory","img":"images/equipment/mmdvm-2.jpg","name":"数字语音热点","model":"MMDVM · 蓝色外壳款","note":"带小型显示窗口，用于数字语音热点实验。"}
 ];
-const CAT_LABEL = {rig:'收发信机', antenna:'天线', amp:'功放', power:'电源', accessory:'附件配件'};
+const CAT_LABEL = {rig:'收发信机', receiver:'接收机', antenna:'天线', accessory:'附件配件'};
 
 const equipmentGrid = document.getElementById('equipmentGrid');
-EQUIPMENT.forEach((item, idx)=>{
+EQUIPMENT.forEach(item=>{
   const card = document.createElement('div');
   card.className = 'equip-card';
   card.dataset.cat = item.cat;
   card.innerHTML =
-    mediaBox(item, 'equip-img', '占位图 · 待替换实拍照片')+
+    '<img class="equip-img" src="'+item.img+'" alt="'+item.model+'" loading="lazy" decoding="async">'+
     '<div class="equip-body">'+
       '<div class="equip-cat">'+CAT_LABEL[item.cat]+'</div>'+
       '<div class="equip-name">'+item.name+'</div>'+
@@ -690,7 +701,7 @@ const lightboxImage = document.getElementById('lightboxImage');
 const lightboxBody = document.getElementById('lightboxBody');
 function openLightbox(item){
   lightboxImage.innerHTML = item.img
-    ? '<img src="'+item.img+'" alt="'+(item.name||'')+'" style="width:100%;height:100%;object-fit:cover;">'
+    ? '<img src="'+item.img+'" alt="'+(item.name||'')+'" style="width:100%;height:100%;object-fit:contain;">'
     : iconSvg(item.icon || 'camera') + '<div class="ph-text">占位图 · 待替换清晰实拍照片</div>';
   let specsHtml = '';
   if(item.specs){
