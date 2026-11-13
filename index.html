@@ -136,14 +136,22 @@ button{font-family:inherit;cursor:pointer;}
 }
 .hero-photo{
   position:absolute;inset:0;
-  background:
-    linear-gradient(var(--overlay),var(--overlay)),
-    repeating-linear-gradient(135deg,var(--bg-panel-2) 0 2px,var(--bg-page) 2px 30px);
-  display:flex;align-items:center;justify-content:center;
+  background:var(--bg-page) url('images/bar01.jpg') center / cover no-repeat;
 }
-.hero-photo .ph-note{
-  position:relative;color:var(--text-muted);font-size:.75rem;text-align:center;
-  border:1px dashed var(--border);padding:10px 18px;border-radius:4px;background:var(--overlay);
+.hero-photo::before,
+.hero-photo::after{
+  content:"";
+  position:absolute;inset:0;
+}
+.hero-photo::before{
+  background:url('images/bar02.jpg') center / cover no-repeat;
+  opacity:0;
+  animation:hero-photo-swap 30s step-end infinite;
+}
+.hero-photo::after{background:var(--overlay);}
+@keyframes hero-photo-swap{
+  0%{opacity:0;}
+  50%, 100%{opacity:1;}
 }
 .hero-inner{position:relative;z-index:2;}
 .hero-utc{
@@ -357,9 +365,7 @@ footer.site-footer{padding:60px 0 40px;border-top:1px solid var(--border);}
 
 <!-- ====================== HERO ====================== -->
 <header class="hero" id="hero">
-  <div class="hero-photo">
-    <div class="ph-note">【背景占位】建议放置一张暗化处理的电台机房 (shack) 实拍照片<br>推荐尺寸 1920×1080 及以上</div>
-  </div>
+  <div class="hero-photo" aria-hidden="true"></div>
   <div class="hero-inner wrap">
     <div class="hero-utc mono">
       <span class="label" style="margin:0;">UTC</span>
