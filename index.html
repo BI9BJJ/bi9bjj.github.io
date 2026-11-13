@@ -206,8 +206,8 @@ section{padding:90px 0;border-top:1px solid var(--border);position:relative;}
 .placeholder-box .ph-text{font-size:.72rem;line-height:1.5;}
 
 /* ====================== 电台全景 ====================== */
-.station-panorama{aspect-ratio:21/6;width:100%;}
-.station-panorama .ph-text{max-width:280px;}
+.station-panorama{aspect-ratio:21/6;width:100%;padding:0;}
+.station-panorama img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;}
 .filter-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;}
 .chip{
   background:var(--bg-panel);border:1px solid var(--border);color:var(--text-secondary);
@@ -391,8 +391,7 @@ BI9BJJ P.O. Box 399-5, HuiNan Post Office, Shanghai 201399, P.R.China, +86-21-58
       <p>点击下方分类，快速筛选设备墙中的收发信机、天线、功放等器材。</p>
     </div>
     <div class="placeholder-box station-panorama">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg>
-      <div class="ph-text">【电台全景照片占位】建议尺寸 2400×700px<br>展示整体机房布局的横幅照片</div>
+      <img src="images/station-panorama.png" alt="业余无线电设备全景" loading="lazy">
     </div>
     <div class="filter-chips" id="filterChips">
       <button class="chip active" data-cat="all">全部</button>
